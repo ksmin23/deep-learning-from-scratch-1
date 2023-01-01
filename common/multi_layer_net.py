@@ -91,6 +91,7 @@ class MultiLayerNet:
             W = self.params['W' + str(idx)]
             weight_decay += 0.5 * self.weight_decay_lambda * np.sum(W ** 2)
 
+        #XXX: 모든 가중치의 손실 함수에 1/2*weight_decay_lambda*W^2(=L2 Norm)를 더한다.
         return self.last_layer.forward(y, t) + weight_decay
 
     def accuracy(self, x, t):
@@ -153,6 +154,7 @@ class MultiLayerNet:
         # 결과 저장
         grads = {}
         for idx in range(1, self.hidden_layer_num+2):
+            #XXX: 가중치의 기울기를 계산할 때, 1/2*weight_decay_lambda*W^2(=L2 Norm) 를 미분한 weight_decay_lambda*W를 더한다.
             grads['W' + str(idx)] = self.layers['Affine' + str(idx)].dW + self.weight_decay_lambda * self.layers['Affine' + str(idx)].W
             grads['b' + str(idx)] = self.layers['Affine' + str(idx)].db
 
